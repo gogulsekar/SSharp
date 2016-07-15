@@ -14,45 +14,47 @@
  * limitations under the License.
  */
 
+using System;
+using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 
 namespace Scripting.SSharp.Runtime.Configuration
 {
-  /// <summary>
-  /// Represents single Reference node in script configuration
-  /// </summary>
-  public sealed class Reference
-  {
-    [XmlAttribute(ConfigSchema.Name)]
-    public string Name { get; set; }
-    [XmlAttribute(ConfigSchema.IsStrongNamed)]
-    public bool StrongNamed { get; set; }
-
-    public Reference()
-    {
-    }
-
-    public Reference(string name, bool sn)
-    {
-      Name = name;
-      StrongNamed = sn;
-    }
-
     /// <summary>
-    /// Loads assembly to current application domain
+    /// Represents single Reference node in script configuration
     /// </summary>
-    /// <returns></returns>
-    public Assembly Load()
+    public sealed class Reference
     {
-      if (StrongNamed) return Assembly.Load(Name);
+        [XmlAttribute(ConfigSchema.Name)]
+        public string Name { get; set; }
+        [XmlAttribute(ConfigSchema.IsStrongNamed)]
+        public bool StrongNamed { get; set; }
 
-      return Assembly.LoadFrom(Name);
-    }
+        public Reference()
+        {
+        }
 
-    public override string ToString()
-    {
-      return Name;
+        public Reference(string name, bool sn)
+        {
+            Name = name;
+            StrongNamed = sn;
+        }
+
+        /// <summary>
+        /// Loads assembly to current application domain
+        /// </summary>
+        /// <returns></returns>
+        public Assembly Load()
+        {
+            if (StrongNamed) return Assembly.Load(Name);
+
+            return Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, Name + ".dll"));
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
-  }
 }

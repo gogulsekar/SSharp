@@ -254,15 +254,22 @@ namespace Scripting.SSharp.Runtime
         WorkingAssemblies.Add(assembly);
       }
 
-      foreach (Type type in assembly.GetExportedTypes())
-      {
-        if (!type.IsPublic) continue;
+            try
+            {
+                foreach (Type type in assembly.GetExportedTypes())
+                {
+                    if (!type.IsPublic) continue;
 
-        if (OnBeforeAddType(assembly, type).Cancel)
-          continue;
+                    if (OnBeforeAddType(assembly, type).Cancel)
+                        continue;
 
-        RegisterType(type);
-      }
+                    RegisterType(type);
+                }
+            }
+            catch(Exception ex)
+            {
+                //no worries..continue..
+            }
     }
 
     public virtual void RemoveAssembly(Assembly assembly)

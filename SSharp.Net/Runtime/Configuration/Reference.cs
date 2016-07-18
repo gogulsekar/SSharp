@@ -49,7 +49,7 @@ namespace Scripting.SSharp.Runtime.Configuration
         {
             if (StrongNamed) return Assembly.Load(Name);
 
-            return Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, Name + ".dll"));
+            return Assembly.LoadFrom(Name);
         }
 
         public override string ToString()
